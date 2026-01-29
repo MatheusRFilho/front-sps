@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import toast from 'react-hot-toast';
+import { useToast } from '../hooks';
 import { useTheme } from '../contexts/ThemeContext';
 import { Button, Input } from '../components';
 import { ForgotPasswordFormData, isAxiosError } from '../types';
@@ -107,6 +107,7 @@ const ForgotPassword: React.FC = () => {
 
   const { themeMode, toggleTheme } = useTheme();
   const { t, i18n } = useTranslation();
+  const toast = useToast();
   const authService = new AuthService();
 
   const validateForm = (): boolean => {
@@ -137,7 +138,7 @@ const ForgotPassword: React.FC = () => {
       await authService.forgotPassword(formData.email);
       
       setEmailSent(true);
-      toast.success(t('auth.resetLinkSent'));
+      toast.success('auth.resetLinkSent');
     } catch (error: unknown) {
       let errorMessage = t('auth.forgotPasswordError');
       
@@ -150,7 +151,7 @@ const ForgotPassword: React.FC = () => {
         errorMessage = error.message;
       }
       
-      toast.error(errorMessage);
+      toast.error('auth.forgotPasswordError', errorMessage);
     } finally {
       setIsLoading(false);
     }

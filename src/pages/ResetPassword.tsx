@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import toast from 'react-hot-toast';
+import { useToast } from '../hooks';
 import { useTheme } from '../contexts/ThemeContext';
 import { Button, Input } from '../components';
 import { ResetPasswordFormData, isAxiosError } from '../types';
@@ -100,6 +100,9 @@ const ErrorMessage = styled.div`
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const toast = useToast();
+  
   const [formData, setFormData] = useState<ResetPasswordFormData>({
     password: '',
     confirmPassword: '',
@@ -110,7 +113,7 @@ const ResetPassword: React.FC = () => {
   const [tokenError, setTokenError] = useState<string | null>(null);
 
   const { themeMode, toggleTheme } = useTheme();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const authService = new AuthService();
 
   useEffect(() => {
@@ -159,7 +162,7 @@ const ResetPassword: React.FC = () => {
       setIsLoading(true);
       await authService.resetPassword(token, formData.password);
       
-      toast.success(t('auth.passwordResetSuccess'));
+      toast.success('auth.passwordResetSuccess');
       
       setTimeout(() => {
         navigate('/signin');
@@ -177,7 +180,7 @@ const ResetPassword: React.FC = () => {
         errorMessage = error.message;
       }
       
-      toast.error(errorMessage);
+      toast.error('auth.resetPasswordError', errorMessage);
     } finally {
       setIsLoading(false);
     }

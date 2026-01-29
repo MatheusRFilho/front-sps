@@ -267,7 +267,7 @@ const Users: React.FC = () => {
       
       await userService.delete(deleteModal.user.id);
       
-      toast.success(t('users.deleteSuccess', 'Usuário excluído com sucesso!'));
+      toast.success('users.deleteSuccess', 'Usuário excluído com sucesso!');
       setDeleteModal({ isOpen: false, user: null });
       
       if (users.length === 1 && currentPage > 1) {
@@ -293,7 +293,7 @@ const Users: React.FC = () => {
         }
       }
       
-      toast.error(errorMessage);
+      toast.error('users.deleteError', errorMessage);
     } finally {
       setDeleting(false);
     }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import toast from 'react-hot-toast';
+import { useToast } from '../../hooks';
 
 import { Modal, Button, Input } from '../';
 import { useAuth } from '../../contexts/AuthContext';
@@ -140,6 +140,7 @@ export const UserEditModal: React.FC<UserEditModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const { hasPermission } = useAuth();
+  const toast = useToast();
   
   const userService = useMemo(() => new UserService(), []);
   
@@ -210,21 +211,21 @@ export const UserEditModal: React.FC<UserEditModalProps> = ({
           setPermissions([]);
           if (isAxiosError(permissionError)) {
             const message = permissionError.response?.data?.message || 'Erro ao carregar lista de permissões';
-            toast.error(message);
+            toast.error('toast.loadPermissionsError', message);
           }
         }
       }
     } catch (error) {
       if (isAxiosError(error)) {
         const message = error.response?.data?.message || error.response?.data?.error || 'Erro ao carregar dados do usuário';
-        toast.error(message);
+        toast.error('toast.loadUserDataError', message);
       } else {
-        toast.error('Erro inesperado ao carregar dados');
+        toast.error('toast.unexpectedLoadError', 'Erro inesperado ao carregar dados');
       }
     } finally {
       setLoadingData(false);
     }
-  }, [userId, canEditPermissions, userService]);
+  }, [userId, canEditPermissions, userService, toast]);
 
   useEffect(() => {
     if (isOpen && userId) {
@@ -337,15 +338,15 @@ export const UserEditModal: React.FC<UserEditModalProps> = ({
       if (!userId) return;
       await userService.update(userId, updateData);
       
-      toast.success(t('users.updateSuccess', 'Usuário atualizado com sucesso!'));
+      toast.success('users.updateSuccess', 'Usuário atualizado com sucesso!');
       onSuccess();
       onClose();
     } catch (error) {
       if (isAxiosError(error)) {
         const message = error.response?.data?.message || error.response?.data?.error || 'Erro ao atualizar usuário';
-        toast.error(message);
+        toast.error('toast.updateUserError', message);
       } else {
-        toast.error('Erro inesperado ao atualizar usuário');
+        toast.error('toast.unexpectedUpdateError', 'Erro inesperado ao atualizar usuário');
       }
     } finally {
       setLoading(false);

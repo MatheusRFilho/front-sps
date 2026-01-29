@@ -34,27 +34,27 @@ export const useToast = (options: ToastOptions = {}): ToastMessages => {
   };
 
   const success = (key: string, fallback?: string, interpolation?: Record<string, string | number>) => {
-    const message = t(key, fallback || '', interpolation);
+    const message = t(key, { defaultValue: fallback, ...interpolation });
     toast.success(message, defaultOptions);
   };
 
   const error = (key: string, fallback?: string, interpolation?: Record<string, string | number>) => {
-    const message = t(key, fallback || '', interpolation);
+    const message = t(key, { defaultValue: fallback, ...interpolation });
     toast.error(message, defaultOptions);
   };
 
   const info = (key: string, fallback?: string, interpolation?: Record<string, string | number>) => {
-    const message = t(key, fallback || '', interpolation);
+    const message = t(key, { defaultValue: fallback, ...interpolation });
     toast(message, defaultOptions);
   };
 
   const warning = (key: string, fallback?: string, interpolation?: Record<string, string | number>) => {
-    const message = t(key, fallback || '', interpolation);
+    const message = t(key, { defaultValue: fallback, ...interpolation });
     toast(message, { ...defaultOptions, icon: '⚠️' });
   };
 
   const loading = (key: string, fallback?: string, interpolation?: Record<string, string | number>) => {
-    const message = t(key, fallback || '', interpolation);
+    const message = t(key, { defaultValue: fallback, ...interpolation });
     return toast.loading(message, defaultOptions);
   };
 

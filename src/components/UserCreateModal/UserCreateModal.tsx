@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import toast from 'react-hot-toast';
+import { useToast } from '../../hooks';
 import { CreateUserDto, isAxiosError } from '../../types';
 import { UserService } from '../../services/UserService';
 import { Modal, Button, Input } from '../index';
@@ -53,6 +53,7 @@ export const UserCreateModal: React.FC<UserCreateModalProps> = ({
   onSuccess,
 }) => {
   const { t } = useTranslation();
+  const toast = useToast();
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -107,7 +108,7 @@ export const UserCreateModal: React.FC<UserCreateModalProps> = ({
       
       const userData: CreateUserDto = validation.data;
       await userService.create(userData);
-      toast.success(t('users.createSuccess'));
+      toast.success('users.createSuccess');
       
       setFormData({ name: '', email: '', password: '' });
       setErrors({});
@@ -117,7 +118,7 @@ export const UserCreateModal: React.FC<UserCreateModalProps> = ({
     } catch (error: unknown) {
       const errorMessage = (isAxiosError(error) && error.response?.data?.message) || 
         t('users.createError');
-      toast.error(errorMessage);
+      toast.error('users.createError', errorMessage);
     } finally {
       setSaving(false);
     }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate, LoaderFunctionArgs } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-import toast from 'react-hot-toast';
+import { useToast } from '../hooks';
 import { User, UserFormData, CreateUserDto, isAxiosError } from '../types';
 import { createUserSchema, updateUserSchema, validateData } from '../schemas';
 import { UserService } from '../services/UserService';
@@ -73,6 +73,7 @@ const UserEdit: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const toast = useToast();
   
   const [, setUser] = useState<User | null>(null);
   const [formData, setFormData] = useState<UserFormData>({
@@ -100,12 +101,12 @@ const UserEdit: React.FC = () => {
       });
     } catch (error: unknown) {
       const errorMessage = (isAxiosError(error) && error.response?.data?.message) || t('users.loadError');
-      toast.error(errorMessage);
+      toast.error('users.loadError', errorMessage);
       navigate('/users');
     } finally {
       setLoading(false);
     }
-  }, [navigate, t, userService]);
+  }, [navigate, t, userService, toast]);
 
   useEffect(() => {
     if (!isNewUser && userId) {
@@ -148,17 +149,18 @@ const UserEdit: React.FC = () => {
 
       if (isNewUser) {
         await userService.create(userData as CreateUserDto);
-        toast.success(t('users.createSuccess'));
+        toast.success('users.createSuccess');
       } else if (userId) {
         await userService.update(userId, userData);
-        toast.success(t('users.updateSuccess'));
+        toast.success('users.updateSuccess');
       }
       
       navigate('/users');
     } catch (error: unknown) {
       const errorMessage = (isAxiosError(error) && error.response?.data?.message) || 
         (isNewUser ? t('users.createError') : t('users.updateError'));
-      toast.error(errorMessage);
+      const errorKey = isNewUser ? 'users.createError' : 'users.updateError';
+      toast.error(errorKey, errorMessage);
     } finally {
       setSaving(false);
     }
