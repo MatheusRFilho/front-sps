@@ -28,6 +28,7 @@
    ```env
    REACT_APP_SERVER_URL=http://localhost:3001
    REACT_APP_ENV=development
+   PORT=3001
    ```
 
 4. **Inicie o servidor de desenvolvimento**
@@ -40,4 +41,6 @@
 5. **Acesse a aplicação**
    
    Abra [http://localhost:3001](http://localhost:3001) no seu navegador.
+   
+   > 📝 **Nota**: O projeto está configurado para rodar na porta 3001 por padrão. Se precisar alterar, modifique a variável `PORT` no arquivo `.env`.
 
